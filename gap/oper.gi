@@ -1725,6 +1725,146 @@ function(D, list)
   return DigraphShortestDistance(D, list[1], list[2]);
 end);
 
+InstallMethod(DominatorTree, "for a digraph and a vertex",
+[IsDigraph, IsPosInt],
+function(D, root)
+  local M, node_to_preorder_num, preorder_num_to_node, parent, index, next,
+  current, succ, prev, n, semi, lastlinked, label, bucket, idom,
+  compress, eval, pred, N, w, y, x, i, v;
+
+  M := DigraphNrVertices(D);
+
+  node_to_preorder_num := [];
+  node_to_preorder_num[root] := 1;
+  preorder_num_to_node := [root];
+
+  parent := [];
+  parent[root] := fail;
+
+  index := ListWithIdenticalEntries(M, 1);
+
+  next := 2;
+  current := root;
+  succ := OutNeighbours(D);
+
+  # Step 1: DFS to establish preorder
+  repeat
+    prev := current;
+    for i in [index[current] .. Length(succ[current])] do
+      n := succ[current][i];
+      if not IsBound(node_to_preorder_num[n]) then
+        Add(preorder_num_to_node, n);
+        parent[n] := current;
+        index[current] := i + 1;
+        node_to_preorder_num[n] := next;
+        next := next + 1;
+        current := n;
+        break;
+      fi;
+    od;
+    # continues from here
+    if prev = current then
+      # we backtrack
+      current := parent[current];
+    fi;
+  until current = fail;
+
+  # Step 2: find semidominators, and first pass of immediate dominators
+  semi := [1 .. M];
+  lastlinked := M + 1;  # never linked
+  label := [];
+  bucket := List([1 .. M], x -> []);
+  idom := [];
+  idom[root] := root;
+
+  compress := function(v)
+    local u;
+    u := parent[v];
+    if u <> fail and lastlinked <= M and node_to_preorder_num[u] >=
+        node_to_preorder_num[lastlinked] then
+      compress(u);
+      if node_to_preorder_num[semi[label[u]]]
+          < node_to_preorder_num[semi[label[v]]] then
+        label[v] := label[u];
+      fi;
+      parent[v] := parent[u];
+    fi;
+  end;
+
+  eval := function(v)
+    if lastlinked <= M and node_to_preorder_num[v] >=
+        node_to_preorder_num[lastlinked] then
+      compress(v);
+      return label[v];
+    else
+      return v;
+    fi;
+  end;
+
+  pred := InNeighbours(D);
+  N := Length(preorder_num_to_node);
+  for i in [N, N - 1 .. 2] do
+    w := preorder_num_to_node[i];
+    for v in bucket[w] do
+      y := eval(v);
+      if node_to_preorder_num[semi[y]] < node_to_preorder_num[w] then
+        idom[v] := y;
+      else
+        idom[v] := w;
+      fi;
+    od;
+    bucket[w] := [];
+    for v in pred[w] do
+      if IsBound(node_to_preorder_num[v]) then
+        # Node is reachable from root
+        x := eval(v);
+        if node_to_preorder_num[semi[x]] < node_to_preorder_num[semi[w]] then
+          semi[w] := semi[x];
+        fi;
+      fi;
+    od;
+    if parent[w] = semi[w] then
+      idom[w] := parent[w];
+    else
+      Add(bucket[semi[w]], w);
+    fi;
+    lastlinked := w;
+    label[w] := semi[w];
+  od;
+  for v in bucket[root] do
+    idom[v] := root;
+  od;
+
+  # Step 3: finalize immediate dominators
+  for i in [2 .. N] do
+    w := preorder_num_to_node[i];
+    if idom[w] <> semi[w] then
+      idom[w] := idom[semi[w]];
+    fi;
+  od;
+  idom[root] := fail;
+  return rec(idom := idom, preorder := preorder_num_to_node, sdom := semi);
+end);
+
+InstallMethod(Dominators, "for a digraph and a vertex",
+[IsDigraph, IsPosInt],
+function(D, root)
+  local tree, preorder, result, u, v;
+  tree := DominatorTree(D, root);
+  preorder := tree.preorder;
+  tree := tree.idom;
+  result := [];
+  for v in preorder do
+    result[v] := [v];
+    u := tree[v];
+    if u <> fail then
+      Append(result[v], result[u]);
+    fi;
+  od;
+  # Perform(result, Sort);
+  return result;
+end);
+
 #############################################################################
 # 10. Operations for vertices
 #############################################################################
