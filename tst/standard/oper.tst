@@ -2002,8 +2002,7 @@ gap> OutNeighbours(C);
 [ [ 5, 6, 7 ], [ 7 ], [ 7 ], [ 7 ], [ 1, 6, 7 ], [ 1, 5, 7 ], 
   [ 3, 2, 1, 6, 5, 4 ] ]
 
-#DigraphDijkstra
-# When there is one path to target
+# DigraphDijkstra - when there is one path to target
 gap> mat := [[0, 1, 1], [0, 0, 1], [0, 0, 0]];
 [ [ 0, 1, 1 ], [ 0, 0, 1 ], [ 0, 0, 0 ] ]
 gap> gr := DigraphByAdjacencyMatrix(mat);
@@ -2043,7 +2042,7 @@ gap> DigraphDijkstra(gr, 1, 2);
 gap> DigraphDijkstra(gr, 1, 3);
 [ [ 0, 1, 1, 1 ], [ -1, 1, 1, 1 ] ]
 
-#ModularProduct
+# ModularProduct
 gap> ModularProduct(NullDigraph(0), CompleteDigraph(10));
 <immutable empty digraph with 0 vertices>
 gap> ModularProduct(PetersenGraph(), CompleteDigraph(10));
@@ -2110,7 +2109,8 @@ gap> OutNeighbours(last);
   [ 22, 24, 32, 34, 37, 39, 1, 5, 6, 10, 11, 15, 16, 20, 26, 30, 41, 45, 48 ],
   [ 23, 25, 33, 35, 38, 40, 1, 2, 6, 7, 11, 12, 16, 17, 26, 27, 41, 42, 49 ], 
   [ 21, 24, 31, 34, 36, 39, 2, 3, 7, 8, 12, 13, 17, 18, 27, 28, 42, 43, 50 ] ]
-#
+
+# Dominators
 gap> D := Digraph([[2], [3, 4, 6], [5], [5], [2], []]);
 <immutable digraph with 6 vertices, 7 edges>
 gap> D := CompleteDigraph(5);
