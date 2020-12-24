@@ -1728,11 +1728,11 @@ end);
 InstallMethod(DominatorTree, "for a digraph and a vertex",
 [IsDigraph, IsPosInt],
 function(D, root)
-  local N, node_to_preorder_num, preorder_num_to_node, parent, index, next,
-  current, succ, prev, n, semi, label, ancestor, bucket, idom,
-  compress, eval, pred, w, y, x, i, v;
+  local M, node_to_preorder_num, preorder_num_to_node, parent, index, next,
+  current, succ, prev, n, semi, lastlinked, label, bucket, idom,
+  compress, eval, pred, N, w, y, x, i, v;
 
-  N := DigraphNrVertices(D);
+  M := DigraphNrVertices(D);
 
   node_to_preorder_num := [];
   node_to_preorder_num[root] := 1;
@@ -1741,7 +1741,7 @@ function(D, root)
   parent := [];
   parent[root] := fail;
 
-  index := ListWithIdenticalEntries(N, 1);
+  index := ListWithIdenticalEntries(M, 1);
 
   next := 2;
   current := root;
@@ -1770,28 +1770,30 @@ function(D, root)
   until current = fail;
 
   # Step 2: find semidominators, and first pass of immediate dominators
-  semi := [1 .. N];
+  semi := [1 .. M];
+  lastlinked := M + 1;  # never linked
   label := [];
-  ancestor := ListWithIdenticalEntries(N, 0);
-  bucket := List([1 .. N], x -> []);
+  bucket := List([1 .. M], x -> []);
   idom := [];
   idom[root] := root;
 
   compress := function(v)
     local u;
-    u := ancestor[v];
-    if ancestor[u] <> 0 then
+    u := parent[v];
+    if u <> fail and lastlinked <= M and node_to_preorder_num[u] >=
+        node_to_preorder_num[lastlinked] then
       compress(u);
       if node_to_preorder_num[semi[label[u]]]
           < node_to_preorder_num[semi[label[v]]] then
         label[v] := label[u];
       fi;
-      ancestor[v] := ancestor[u];
+      parent[v] := parent[u];
     fi;
   end;
 
   eval := function(v)
-    if ancestor[v] <> 0 then
+    if lastlinked <= M and node_to_preorder_num[v] >=
+        node_to_preorder_num[lastlinked] then
       compress(v);
       return label[v];
     else
@@ -1826,7 +1828,7 @@ function(D, root)
     else
       Add(bucket[semi[w]], w);
     fi;
-    ancestor[w] := parent[w];
+    lastlinked := w;
     label[w] := semi[w];
   od;
   for v in bucket[root] do
