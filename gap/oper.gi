@@ -1821,11 +1821,11 @@ function(D, root)
         fi;
       fi;
     od;
-    # if parent[w] = semi[w] then
-    #   idom[w] := parent[w];
-    # else
-    Add(bucket[semi[w]], w);
-    # fi;
+    if parent[w] = semi[w] then
+      idom[w] := parent[w];
+    else
+      Add(bucket[semi[w]], w);
+    fi;
     ancestor[w] := parent[w];
     label[w] := semi[w];
   od;
