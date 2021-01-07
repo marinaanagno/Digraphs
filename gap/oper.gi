@@ -1731,6 +1731,9 @@ function(D, root)
   local M, node_to_preorder_num, preorder_num_to_node, parent, index, next,
   current, succ, prev, n, semi, lastlinked, label, bucket, idom,
   compress, eval, pred, N, w, y, x, i, v;
+  if not (root in DigraphVertices(D)) then
+    ErrorNoReturn("the root must be a vertex of D");
+  fi;
 
   M := DigraphNrVertices(D);
 
@@ -1746,8 +1749,6 @@ function(D, root)
   next := 2;
   current := root;
   succ := OutNeighbours(D);
-
-  # Step 1: DFS to establish preorder
   repeat
     prev := current;
     for i in [index[current] .. Length(succ[current])] do
@@ -1762,16 +1763,12 @@ function(D, root)
         break;
       fi;
     od;
-    # continues from here
     if prev = current then
-      # we backtrack
       current := parent[current];
     fi;
   until current = fail;
-
-  # Step 2: find semidominators, and first pass of immediate dominators
   semi := [1 .. M];
-  lastlinked := M + 1;  # never linked
+  lastlinked := M + 1;
   label := [];
   bucket := List([1 .. M], x -> []);
   idom := [];
@@ -1816,7 +1813,6 @@ function(D, root)
     bucket[w] := [];
     for v in pred[w] do
       if IsBound(node_to_preorder_num[v]) then
-        # Node is reachable from root
         x := eval(v);
         if node_to_preorder_num[semi[x]] < node_to_preorder_num[semi[w]] then
           semi[w] := semi[x];
@@ -1834,8 +1830,6 @@ function(D, root)
   for v in bucket[root] do
     idom[v] := root;
   od;
-
-  # Step 3: finalize immediate dominators
   for i in [2 .. N] do
     w := preorder_num_to_node[i];
     if idom[w] <> semi[w] then
@@ -1850,6 +1844,9 @@ InstallMethod(Dominators, "for a digraph and a vertex",
 [IsDigraph, IsPosInt],
 function(D, root)
   local tree, preorder, result, u, v;
+  if not (root in DigraphVertices(D)) then
+    ErrorNoReturn("the root must be a vertex of D");
+  fi;
   tree := DominatorTree(D, root);
   preorder := tree.preorder;
   tree := tree.idom;
@@ -1861,7 +1858,6 @@ function(D, root)
       Append(result[v], result[u]);
     fi;
   od;
-  # Perform(result, Sort);
   return result;
 end);
 
