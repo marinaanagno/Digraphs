@@ -48,3 +48,8 @@ DeclareOperation("PetersenGraph", [IsFunction]);
 DeclareConstructor("GeneralisedPetersenGraphCons", [IsDigraph, IsInt, IsInt]);
 DeclareOperation("GeneralisedPetersenGraph", [IsInt, IsInt]);
 DeclareOperation("GeneralisedPetersenGraph", [IsFunction, IsInt, IsInt]);
+
+DeclareConstructor("PancakeGraphCons", [IsDigraph, IsPosInt]);
+DeclareOperation("PancakeGraph", [IsPosInt]);
+DeclareOperation("PancakeGraph", [IsFunction, IsPosInt]);
+
