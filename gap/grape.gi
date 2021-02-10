@@ -91,35 +91,67 @@ function(imm, G, obj, act, adj)
   return D;
 end);
 
-InstallMethod(CayleyDigraph, "for a group with generators",
-[IsGroup, IsHomogeneousList],
-function(G, gens)
-  local adj, D;
-
+InstallMethod(CayleyDigraphCons,
+"for IsMutableDigraph, group, and list of elements",
+[IsMutableDigraph, IsGroup, IsHomogeneousList],
+function(filt, G, gens)
   if not IsFinite(G) then
-    ErrorNoReturn("the 1st argument <G> must be a finite group,");
+    ErrorNoReturn("the 2nd argument (a group) must be finite");
   elif not ForAll(gens, x -> x in G) then
-    ErrorNoReturn("the 2nd argument <gens> must consist of elements of the ",
-                  "1st argument,");
+    ErrorNoReturn("the 3rd argument (a homog. list) must consist of ",
+                  "elements of the 2nd argument (a group)");
   fi;
+  return Digraph(IsMutableDigraph,
+                 G,
+                 AsList(G),
+                 OnLeftInverse,
+                 {x, y} -> x ^ -1 * y in gens);
+end);
 
-  adj := function(x, y)
-    return x ^ -1 * y in gens;
-  end;
+InstallMethod(CayleyDigraphCons,
+"for IsImmutableDigraph, group, and list of elements",
+[IsImmutableDigraph, IsGroup, IsHomogeneousList],
+function(filt, G, gens)
+  # This method is a duplicate of the one above because the method for Digraph
+  # sets some additional attributes if IsImmutableDigraph is passed as 1st
+  # argument, and so we don't want to make a mutable version of the returned
+  # graph, and then make it immutable, because then those attributes won't be
+  # set.
+  local D;
+  if not IsFinite(G) then
+    ErrorNoReturn("the 2nd argument (a group) must be finite");
+  elif not ForAll(gens, x -> x in G) then
+    ErrorNoReturn("the 3rd argument (a homog. list) must consist ",
+                  "of elements of the 2nd argument (a list)");
+  fi;
+  D := Digraph(IsImmutableDigraph,
+               G,
+               AsList(G),
+               OnLeftInverse,
+               {x, y} -> x ^ -1 * y in gens);
 
-  D := Digraph(G, AsList(G), OnLeftInverse, adj);
   SetFilterObj(D, IsCayleyDigraph);
   SetGroupOfCayleyDigraph(D, G);
   SetGeneratorsOfCayleyDigraph(D, gens);
   SetDigraphEdgeLabels(D, ListWithIdenticalEntries(Size(G), gens));
   SetDigraphVertexLabels(D, AsList(G));
-
   return D;
 end);
 
+InstallMethod(CayleyDigraph, "for a group and list of elements",
+[IsGroup, IsHomogeneousList],
+{G, gens} -> CayleyDigraphCons(IsImmutableDigraph, G, gens));
+
+InstallMethod(CayleyDigraph, "for a filter and group with generators",
+[IsFunction, IsGroup, IsHomogeneousList], CayleyDigraphCons);
+
 InstallMethod(CayleyDigraph, "for a group with generators",
 [IsGroup and HasGeneratorsOfGroup],
-G -> CayleyDigraph(G, GeneratorsOfGroup(G)));
+G -> CayleyDigraphCons(IsImmutableDigraph, G, GeneratorsOfGroup(G)));
+
+InstallMethod(CayleyDigraph, "for a filter and group with generators",
+[IsFunction, IsGroup and HasGeneratorsOfGroup],
+{filt, G} -> CayleyDigraphCons(filt, G, GeneratorsOfGroup(G)));
 
 InstallMethod(Graph, "for a digraph", [IsDigraph],
 function(D)

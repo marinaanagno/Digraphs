@@ -226,6 +226,18 @@ Error, the arguments <n> and <k> must be non-negative integers,
 gap> JohnsonDigraph(IsMutableDigraph, 4, 2);
 <mutable digraph with 6 vertices, 24 edges>
 
+# PancakeGraph
+gap> D := PancakeGraph(3);
+<immutable Hamiltonian connected symmetric digraph with 6 vertices, 12 edges>
+gap> ChromaticNumber(D);
+2
+gap> IsVertexTransitive(D);
+true
+gap> DigraphUndirectedGirth(D);
+6
+gap> IsHamiltonianDigraph(D);
+true
+
 #
 gap> DIGRAPHS_StopTest();
 gap> STOP_TEST("Digraphs package: standard/examples.tst", 0);

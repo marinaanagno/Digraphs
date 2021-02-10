@@ -370,3 +370,39 @@ GeneralisedPetersenGraphCons);
 
 InstallMethod(GeneralisedPetersenGraph, "for integer, integer", [IsInt, IsInt],
 {n, k} -> GeneralisedPetersenGraphCons(IsImmutableDigraph, n, k));
+
+BindGlobal("DIGRAPHS_PrefixReversalGroup",
+function(n)
+  local id, A, i;
+  if n = 1 then
+    return Group(());
+  fi;
+  id := [1 .. n];
+  A := [];
+  for i in [2 .. n] do
+    id{[1 .. i]} := [i, i - 1 .. 1];
+    Add(A, PermList(id));
+  od;
+  return Group(A);
+end);
+
+InstallMethod(PancakeGraphCons, "for IsMutableDigraph and pos int",
+[IsMutableDigraph, IsPosInt],
+{filt, n} -> CayleyDigraph(IsMutableDigraph, DIGRAPHS_PrefixReversalGroup(n)));
+
+InstallMethod(PancakeGraphCons, "for IsImmutableDigraph and pos int",
+[IsImmutableDigraph, IsPosInt],
+function(filt, n)
+  local D;
+  D := CayleyDigraph(IsImmutableDigraph, DIGRAPHS_PrefixReversalGroup(n));
+  SetIsMultiDigraph(D, false);
+  SetIsSymmetricDigraph(D, true);
+  SetIsHamiltonianDigraph(D, true);
+  return D;
+end);
+
+InstallMethod(PancakeGraph, "for a function and pos int",
+[IsFunction, IsPosInt], PancakeGraphCons);
+
+InstallMethod(PancakeGraph, "for a pos int",
+[IsPosInt], n -> PancakeGraphCons(IsImmutableDigraph, n));
