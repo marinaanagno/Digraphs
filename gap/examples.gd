@@ -90,3 +90,7 @@ DeclareOperation("TadpoleDigraph", [IsFunction, IsPosInt, IsPosInt]);
 DeclareConstructor("BookDigraphCons", [IsDigraph, IsPosInt]);
 DeclareOperation("BookDigraph", [IsPosInt]);
 DeclareOperation("BookDigraph", [IsFunction, IsPosInt]);
+
+DeclareConstructor("PancakeGraphCons", [IsDigraph, IsPosInt]);
+DeclareOperation("PancakeGraph", [IsPosInt]);
+DeclareOperation("PancakeGraph", [IsFunction, IsPosInt]);

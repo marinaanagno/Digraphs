@@ -379,6 +379,17 @@ gap> BookDigraph(IsMutable, 12);
 gap> IsSymmetricDigraph(BookDigraph(24));
 true
 gap> IsBipartiteDigraph(BookDigraph(32));
+
+# PancakeGraph
+gap> D := PancakeGraph(3);
+<immutable Hamiltonian connected symmetric digraph with 6 vertices, 12 edges>
+gap> ChromaticNumber(D);
+2
+gap> IsVertexTransitive(D);
+true
+gap> DigraphUndirectedGirth(D);
+6
+gap> IsHamiltonianDigraph(D);
 true
 
 #

@@ -738,3 +738,29 @@ function(filt, m)
   SetIsBipartiteDigraph(D, true);
   return D;
 end);
+
+BindGlobal("DIGRAPHS_PrefixReversalGroup",
+function(n)
+  return Group(List([2 .. n], i -> PermList([i, i - 1 .. 1])), ());
+end);
+
+InstallMethod(PancakeGraphCons, "for IsMutableDigraph and pos int",
+[IsMutableDigraph, IsPosInt],
+{filt, n} -> CayleyDigraph(IsMutableDigraph, DIGRAPHS_PrefixReversalGroup(n)));
+
+InstallMethod(PancakeGraphCons, "for IsImmutableDigraph and pos int",
+[IsImmutableDigraph, IsPosInt],
+function(filt, n)
+  local D;
+  D := CayleyDigraph(IsImmutableDigraph, DIGRAPHS_PrefixReversalGroup(n));
+  SetIsMultiDigraph(D, false);
+  SetIsSymmetricDigraph(D, true);
+  SetIsHamiltonianDigraph(D, true);
+  return D;
+end);
+
+InstallMethod(PancakeGraph, "for a function and pos int",
+[IsFunction, IsPosInt], PancakeGraphCons);
+
+InstallMethod(PancakeGraph, "for a pos int",
+[IsPosInt], n -> PancakeGraphCons(IsImmutableDigraph, n));
