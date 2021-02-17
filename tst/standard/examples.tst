@@ -238,6 +238,17 @@ gap> DigraphUndirectedGirth(D);
 gap> IsHamiltonianDigraph(D);
 true
 
+# BurntPancakeGraph
+gap> BurntPancakeGraph(3);
+<immutable Hamiltonian connected symmetric digraph with 48 vertices, 144 edges\
+>
+gap> BurntPancakeGraph(4);
+<immutable Hamiltonian connected symmetric digraph with 384 vertices, 1536 edg\
+es>
+gap> BurntPancakeGraph(5);
+<immutable Hamiltonian connected symmetric digraph with 3840 vertices, 19200 e\
+dges>
+
 #
 gap> DIGRAPHS_StopTest();
 gap> STOP_TEST("Digraphs package: standard/examples.tst", 0);
