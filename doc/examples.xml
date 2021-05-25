@@ -320,15 +320,9 @@ gap> GeneralisedPetersenGraph(IsMutableDigraph, 9, 4);
     directed edges. The <M>n</M>th Pancake graph is the Cayley graph of the
     symmetric group acting on <C>[1 .. <A>n</A>]</C> with respect to the
     generating set consisting of the <Q>prefix reversals</Q>. This generating
-<<<<<<< HEAD
-    set has consists of the permutations <C>p2</C>, <C>p3</C>, ...,
-    <C>p<A>n</A></C> where <C>ListPerm(pi, <A>n</A>)</C> is the concatenation
-    of <C>[i, i -1 .. 1]</C> and <C>[i + 1 .. <A>n</A>]</C>. 
-=======
     set consists of the permutations <C>p2</C>, <C>p3</C>, ...,
     <C>p<A>n</A></C> where <C>ListPerm(pi, <A>n</A>)</C> is the concatenation
     of <C>[i, i - 1 .. 1]</C> and <C>[i + 1 .. <A>n</A>]</C>. 
->>>>>>> bcdb690974f08b5c8f9afa4485482451bc0d8120
     <P/>
 
     If the optional first argument <A>filt</A> is present, then this should
