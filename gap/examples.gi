@@ -373,17 +373,7 @@ InstallMethod(GeneralisedPetersenGraph, "for integer, integer", [IsInt, IsInt],
 
 BindGlobal("DIGRAPHS_PrefixReversalGroup",
 function(n)
-  local id, A, i;
-  if n = 1 then
-    return Group(());
-  fi;
-  id := [1 .. n];
-  A := [];
-  for i in [2 .. n] do
-    id{[1 .. i]} := [i, i - 1 .. 1];
-    Add(A, PermList(id));
-  od;
-  return Group(A);
+  return Group(List([2 .. n], i -> PermList([i, i - 1 .. 1])), ());
 end);
 
 InstallMethod(PancakeGraphCons, "for IsMutableDigraph and pos int",

@@ -1,7 +1,7 @@
 #############################################################################
 ##
 ##  grape.gi
-##  Copyright (C) 2019                                   James D. Mitchell
+##  Copyright (C) 2019-21                                James D. Mitchell
 ##
 ##  Licensing information can be found in the README file of this package.
 ##
@@ -96,10 +96,10 @@ InstallMethod(CayleyDigraphCons,
 [IsMutableDigraph, IsGroup, IsHomogeneousList],
 function(filt, G, gens)
   if not IsFinite(G) then
-    ErrorNoReturn("the 1st argument <G> must be a finite group,");
+    ErrorNoReturn("the 2nd argument (a group) must be finite");
   elif not ForAll(gens, x -> x in G) then
-    ErrorNoReturn("the 2nd argument <gens> must consist of elements of the ",
-                  "1st argument,");
+    ErrorNoReturn("the 3rd argument (a homog. list) must consist of ",
+                  "elements of the 2nd argument (a group)");
   fi;
   return Digraph(IsMutableDigraph,
                  G,
@@ -119,10 +119,10 @@ function(filt, G, gens)
   # set.
   local D;
   if not IsFinite(G) then
-    ErrorNoReturn("the 1st argument <G> must be a finite group,");
+    ErrorNoReturn("the 2nd argument (a group) must be finite");
   elif not ForAll(gens, x -> x in G) then
-    ErrorNoReturn("the 2nd argument <gens> must consist of elements of the ",
-                  "1st argument,");
+    ErrorNoReturn("the 3rd argument (a homog. list) must consist ",
+                  "of elements of the 2nd argument (a list)");
   fi;
   D := Digraph(IsImmutableDigraph,
                G,
@@ -133,6 +133,8 @@ function(filt, G, gens)
   SetFilterObj(D, IsCayleyDigraph);
   SetGroupOfCayleyDigraph(D, G);
   SetGeneratorsOfCayleyDigraph(D, gens);
+  SetDigraphEdgeLabels(D, ListWithIdenticalEntries(Size(G), gens));
+  SetDigraphVertexLabels(D, AsList(G));
   return D;
 end);
 
