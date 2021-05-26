@@ -273,6 +273,18 @@ gap> Digraph(IsSemigroup, SymmetricGroup(3), [1, 2, 3], OnPoints,
 > {x, y} -> x <> y);
 Error, <imm> must be IsMutableDigraph or IsImmutableDigraph
 
+# Code coverage
+gap> D := Digraph([[1, 1]]);
+<immutable multidigraph with 1 vertex, 2 edges>
+gap> Graph(D);
+rec( adjacencies := [ [ 1 ] ], group := Group(()), isGraph := true, 
+  names := [ 1 ], order := 1, representatives := [ 1 ], 
+  schreierVector := [ -1 ] )
+gap> D := CompleteDigraph(IsMutableDigraph, 5);;
+gap> HasDigraphGroup(D);
+false
+gap> Graph(D);;
+
 #
 gap> DIGRAPHS_StopTest();
 gap> STOP_TEST("Digraphs package: standard/grape.tst", 0);

@@ -392,6 +392,8 @@ gap> DigraphUndirectedGirth(D);
 6
 gap> IsHamiltonianDigraph(D);
 true
+gap> D := PancakeGraph(IsMutableDigraph, 1);
+<mutable empty digraph with 1 vertex>
 
 # BurntPancakeGraph
 gap> BurntPancakeGraph(3);
@@ -403,6 +405,8 @@ es>
 gap> BurntPancakeGraph(5);
 <immutable Hamiltonian connected symmetric digraph with 3840 vertices, 19200 e\
 dges>
+gap> BurntPancakeGraph(IsMutableDigraph, 1);
+<mutable digraph with 1 vertex, 1 edge>
 
 #
 gap> DIGRAPHS_StopTest();
