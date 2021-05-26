@@ -528,6 +528,9 @@ gap> IsCayleyDigraph(D);
 true
 gap> IsVertexTransitive(D);
 true]]></Example>
+  </Description>
+</ManSection>
+<#/GAPDoc>
 
 <#GAPDoc Label="StarDigraph">
 <ManSection>

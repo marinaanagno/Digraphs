@@ -112,12 +112,13 @@ InstallMethod(CayleyDigraphCons,
 "for IsImmutableDigraph, group, and list of elements",
 [IsImmutableDigraph, IsGroup, IsHomogeneousList],
 function(filt, G, gens)
+  local D, edge_labels;
   # This method is a duplicate of the one above because the method for Digraph
   # sets some additional attributes if IsImmutableDigraph is passed as 1st
   # argument, and so we don't want to make a mutable version of the returned
   # graph, and then make it immutable, because then those attributes won't be
   # set.
-  local D;
+
   if not IsFinite(G) then
     ErrorNoReturn("the 2nd argument (a group) must be finite");
   elif not ForAll(gens, x -> x in G) then
@@ -136,7 +137,8 @@ function(filt, G, gens)
   SetGeneratorsOfCayleyDigraph(D, gens);
   SetDigraphVertexLabels(D, AsList(G));
   # Out-neighbours of identity give the correspondence between edges & gens
-  edge_labels := elts{OutNeighboursOfVertex(D, Position(AsList(G), One(G)))};
+  edge_labels := AsList(G){OutNeighboursOfVertex(D,
+                                                 Position(AsList(G), One(G)))};
   SetDigraphEdgeLabels(D, ListWithIdenticalEntries(Size(G), edge_labels));
   return D;
 end);

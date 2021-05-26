@@ -379,6 +379,7 @@ gap> BookDigraph(IsMutable, 12);
 gap> IsSymmetricDigraph(BookDigraph(24));
 true
 gap> IsBipartiteDigraph(BookDigraph(32));
+true
 
 # PancakeGraph
 gap> D := PancakeGraph(3);
