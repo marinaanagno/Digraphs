@@ -509,6 +509,7 @@ gap> TriangularGridGraph(IsMutable, 3, 3);
     of <C>[i, i - 1 .. 1]</C> and <C>[i + 1 .. <A>n</A>]</C>. 
     <P/>
     
+    If the optional first argument <A>filt</A> is not present, then <Ref
     Filt="IsImmutableDigraph"/> is used by default.<P/>
 
     See <URL>https://en.wikipedia.org/wiki/Pancake_graph</URL> for further
